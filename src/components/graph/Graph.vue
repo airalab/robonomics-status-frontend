@@ -20,7 +20,7 @@
     </v-dialog>
     <v-progress-linear v-if="peersCount === 0" indeterminate height="1" style="margin-top: 0;margin-bottom: 0;"></v-progress-linear>
     <v-divider v-else />
-    <div id="visualization" style="background-color:#fff;height:100%"></div>
+    <div id="visualization" style="background-color:#fff;"></div>
   </div>
 </template>
 
@@ -43,6 +43,7 @@ const robonomics = getRobonomics()
 const ipfs = getIpfs()
 const nodes = new vis.DataSet([])
 const edges = new vis.DataSet([])
+const lighthouses = {}
 let network
 
 let status = false
@@ -69,6 +70,13 @@ export default {
     }
   },
   mounted () {
+    const body = document.body
+    const html = document.documentElement
+    const nav = document.getElementsByClassName('v-toolbar')[0].offsetHeight
+    const panelgraph = document.getElementsByClassName('panel-graph')[0].offsetHeight
+    const height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight)
+    document.getElementById('visualization').style.height = (height - nav - panelgraph - 30) + 'px'
+
     // robonomics = getRobonomics()
     const container = document.getElementById('visualization')
     const options = {
@@ -182,7 +190,7 @@ export default {
         const hash = r.data.toString().trim()
         getDataByIpns(hash)
           .then((data) => this.getPeers(hash, data))
-      })
+      }, { discover: true })
     },
     addLighthouse (id, info = {}) {
       const node = nodes.get(id)
@@ -210,15 +218,17 @@ export default {
         console.error(err)
       }
       this.addNodeCount()
-      const li = new Lighthouse(robonomics.web3, id, ((_has(info, 'ens')) ? info.ens : ''))
-      li.getMembers()
-        .then((result) => {
-          result.forEach((member) => {
-            const address = member.toLowerCase()
-            this.addMember(address)
-            this.addEdges(id + address, id, address, false)
+      if (web3.isAddress(id)) {
+        const li = new Lighthouse(robonomics.web3, id, ((_has(info, 'ens')) ? info.ens : ''))
+        li.getMembers()
+          .then((result) => {
+            result.forEach((member) => {
+              const address = member.toLowerCase()
+              this.addMember(address)
+              this.addEdges(id + address, id, address, false)
+            })
           })
-        })
+      }
     },
     addMember (id, info = {}) {
       const node = nodes.get(id)
@@ -350,15 +360,23 @@ export default {
         })
         robonomics.ens.addr(info.lighthouse)
           .then((r) => {
-            const lighthouse = r.toLowerCase()
-            this.addLighthouse(lighthouse, { ens: info.lighthouse, address: lighthouse })
-            this.addEdges(lighthouse + address, lighthouse, address, false)
+            const addr = r.toLowerCase()
+            let idLighthouse = addr
+            if (addr === '0x0000000000000000000000000000000000000000' || addr === '0x') {
+              idLighthouse = info.lighthouse
+            }
+            this.addLighthouse(idLighthouse, { ens: info.lighthouse, address: idLighthouse })
+            this.addEdges(idLighthouse + address, idLighthouse, address, false)
+            lighthouses[info.lighthouse] = idLighthouse
           })
         let removePeers = []
         let newPeers = info.peers
         if (_has(old, 'peers')) {
           removePeers = _difference(old.peers, info.peers)
           newPeers = _difference(info.peers, old.peers)
+        }
+        if (_has(old, 'lighthouse') && old.lighthouse !== info.lighthouse) {
+          removePeers.push(lighthouses[old.lighthouse] + address)
         }
         newPeers.forEach((element) => {
           // если ipfs hash есть то рисуем

@@ -1,7 +1,7 @@
 <template>
   <v-layout align-space-around justify-space-around row fill-height>
     <v-flex md12>
-      <v-container fluid grid-list-md class="px-0 py-0">
+      <v-container fluid grid-list-md class="px-0 py-0 panel-graph">
         <v-layout align-center justify-space-between row wrap>
           <v-flex sm12 md6 lg4 class="text-md-right">
             <v-layout row>
