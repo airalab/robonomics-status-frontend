@@ -6,115 +6,119 @@
         <div class="title"><v-icon>move_to_inbox</v-icon> LAST BLOCK: <strong>{{lastBlock}}</strong></div>
       </v-flex>
       <v-flex md12 class="mb-5">
-        <h2 class="mb-3">Amount of recycling gas in a block of Ethereum network</h2>
+        <h2 class="mb-3">
+          Amount of recycling gas
+          <v-btn outline small :color="isShowGas ? 'blue-grey' : 'indigo'"  @click="isShowGas = !isShowGas" class="mt-0">
+            <span v-if="isShowGas">less</span>
+            <span v-else>more</span>
+          </v-btn>
+        </h2>
 
         <strong>Full amount of utilized gas</strong>
-        <v-layout row wrap class="mt-3">
-          <v-flex md3>
-            last block<br />
-            <strong>{{gas.full.b}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last 24 hours<br />
-            <strong>{{gas.full.d}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last week<br />
-            <strong>{{gas.full.w}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last month<br />
-            <strong>{{gas.full.m}}</strong>
-          </v-flex>
-        </v-layout>
-        <v-divider class="mb-5" />
+        <div v-show="!isShowGas" class="mt-3">
+          last 24 hours<br />
+          <strong style="font-size: 36px">{{gas.full.d}}</strong>
+        </div>
+        <div v-show="isShowGas">
+          <v-layout row wrap class="mt-3">
+            <v-flex md4>
+              last 24 hours<br />
+              <strong>{{gas.full.d}}</strong>
+            </v-flex>
+            <v-flex md4>
+              last week<br />
+              <strong>{{gas.full.w}}</strong>
+            </v-flex>
+            <v-flex md4>
+              last month<br />
+              <strong>{{gas.full.m}}</strong>
+            </v-flex>
+          </v-layout>
+          <v-divider class="mb-5" />
 
-        <strong>Profit amount of utilized gas</strong>
-        <v-layout row wrap class="mt-3">
-          <v-flex md3>
-            last block<br />
-            <strong>{{gas.fin.b}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last 24 hours<br />
-            <strong>{{gas.fin.d}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last week<br />
-            <strong>{{gas.fin.w}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last month<br />
-            <strong>{{gas.fin.m}}</strong>
-          </v-flex>
-        </v-layout>
-        <v-divider class="mb-5" />
+          <strong>Profit amount of utilized gas</strong>
+          <v-layout row wrap class="mt-3">
+            <v-flex md4>
+              last 24 hours<br />
+              <strong>{{gas.fin.d}}</strong>
+            </v-flex>
+            <v-flex md4>
+              last week<br />
+              <strong>{{gas.fin.w}}</strong>
+            </v-flex>
+            <v-flex md4>
+              last month<br />
+              <strong>{{gas.fin.m}}</strong>
+            </v-flex>
+          </v-layout>
+          <v-divider class="mb-5" />
+        </div>
       </v-flex>
       <v-flex md12 class="mb-5">
-        <h2 class="mb-3">Capacity of Robonomics network</h2>
+        <h2 class="mb-3">
+          Capacity of Robonomics network
+          <v-btn outline small :color="isShowContracts ? 'blue-grey' : 'indigo'"  @click="isShowContracts = !isShowContracts" class="mt-0">
+            <span v-if="isShowContracts">less</span>
+            <span v-else>more</span>
+          </v-btn>
+        </h2>
 
         <strong>Amount of created contract liabilities</strong>
-        <v-layout row wrap class="mt-3">
-          <v-flex md3>
-            last block<br />
-            <strong>{{li.create.b}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last 24 hours<br />
-            <strong>{{li.create.d}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last week<br />
-            <strong>{{li.create.w}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last month<br />
-            <strong>{{li.create.m}}</strong>
-          </v-flex>
-        </v-layout>
-        <v-divider class="mb-5" />
+        <div v-show="!isShowContracts" class="mt-3">
+          last 24 hours<br />
+          <strong style="font-size: 36px">{{li.create.d}}</strong>
+        </div>
+        <div v-show="isShowContracts">
+          <v-layout row wrap class="mt-3">
+            <v-flex md4>
+              last 24 hours<br />
+              <strong>{{li.create.d}}</strong>
+            </v-flex>
+            <v-flex md4>
+              last week<br />
+              <strong>{{li.create.w}}</strong>
+            </v-flex>
+            <v-flex md4>
+              last month<br />
+              <strong>{{li.create.m}}</strong>
+            </v-flex>
+          </v-layout>
+          <v-divider class="mb-5" />
 
-        <strong>Amount of finalized contract liabilities</strong>
-        <v-layout row wrap class="mt-3">
-          <v-flex md3>
-            last block<br />
-            <strong>{{li.fin.b}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last 24 hours<br />
-            <strong>{{li.fin.d}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last week<br />
-            <strong>{{li.fin.w}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last month<br />
-            <strong>{{li.fin.m}}</strong>
-          </v-flex>
-        </v-layout>
-        <v-divider class="mb-5" />
+          <strong>Amount of finalized contract liabilities</strong>
+          <v-layout row wrap class="mt-3">
+            <v-flex md4>
+              last 24 hours<br />
+              <strong>{{li.fin.d}}</strong>
+            </v-flex>
+            <v-flex md4>
+              last week<br />
+              <strong>{{li.fin.w}}</strong>
+            </v-flex>
+            <v-flex md4>
+              last month<br />
+              <strong>{{li.fin.m}}</strong>
+            </v-flex>
+          </v-layout>
+          <v-divider class="mb-5" />
 
-        <strong>Error transaction</strong>
-        <v-layout row wrap class="mt-3">
-          <v-flex md3>
-            last block<br />
-            <strong>{{err.b}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last 24 hours<br />
-            <strong>{{err.d}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last week<br />
-            <strong>{{err.w}}</strong>
-          </v-flex>
-          <v-flex md3>
-            last month<br />
-            <strong>{{err.m}}</strong>
-          </v-flex>
-        </v-layout>
-        <v-divider class="mb-5" />
+          <strong>Error transaction</strong>
+          <v-layout row wrap class="mt-3">
+            <v-flex md4>
+              last 24 hours<br />
+              <strong>{{err.d}}</strong>
+            </v-flex>
+            <v-flex md4>
+              last week<br />
+              <strong>{{err.w}}</strong>
+            </v-flex>
+            <v-flex md4>
+              last month<br />
+              <strong>{{err.m}}</strong>
+            </v-flex>
+          </v-layout>
+          <v-divider class="mb-5" />
+        </div>
       </v-flex>
       <v-flex md12 class="mb-5">
         <h2 class="mb-3">XRT</h2>
@@ -186,15 +190,15 @@ export default {
       totalSupply: 0,
       wn: 0,
       contracts: 0,
+      isShowGas: false,
+      isShowContracts: false,
       gas: {
         full: {
-          b: 0,
           d: 0,
           w: 0,
           m: 0
         },
         fin: {
-          b: 0,
           d: 0,
           w: 0,
           m: 0
@@ -202,20 +206,17 @@ export default {
       },
       li: {
         create: {
-          b: 0,
           d: 0,
           w: 0,
           m: 0
         },
         fin: {
-          b: 0,
           d: 0,
           w: 0,
           m: 0
         }
       },
       err: {
-        b: 0,
         d: 0,
         w: 0,
         m: 0
