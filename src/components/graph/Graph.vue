@@ -176,7 +176,7 @@ export default {
       robonomics.getLighthouses()
         .then((r) => {
           r.forEach((item) => {
-            this.addLighthouse(item.addr.toLowerCase(), {
+            this.addLighthouse(item.name.toLowerCase(), {
               ens: item.name,
               address: item.addr
             })
@@ -218,8 +218,8 @@ export default {
         console.error(err)
       }
       this.addNodeCount()
-      if (web3.isAddress(id)) {
-        const li = new Lighthouse(robonomics.web3, id, ((_has(info, 'ens')) ? info.ens : ''))
+      if (_has(info, 'address') && web3.isAddress(info.address) && info.address !== '0x0000000000000000000000000000000000000000') {
+        const li = new Lighthouse(robonomics.web3, info.address, ((_has(info, 'ens')) ? info.ens : ''))
         li.getMembers()
           .then((result) => {
             result.forEach((member) => {
@@ -360,12 +360,14 @@ export default {
         })
         robonomics.ens.addr(info.lighthouse)
           .then((r) => {
-            const addr = r.toLowerCase()
-            let idLighthouse = addr
-            if (addr === '0x0000000000000000000000000000000000000000' || addr === '0x') {
-              idLighthouse = info.lighthouse
+            let addr = r.toLowerCase()
+            console.log('info', info.lighthouse, addr)
+            const idLighthouse = info.lighthouse.toLowerCase()
+            if (addr === '0x') {
+              addr = '0x0000000000000000000000000000000000000000'
             }
-            this.addLighthouse(idLighthouse, { ens: info.lighthouse, address: idLighthouse })
+            this.addLighthouse(idLighthouse, { ens: info.lighthouse, address: addr })
+            console.log('link', idLighthouse, address)
             this.addEdges(idLighthouse + address, idLighthouse, address, false)
             lighthouses[info.lighthouse] = idLighthouse
           })
@@ -418,6 +420,8 @@ export default {
           this.currentNode.json = JSON.stringify({ ...data.info.new }, null, 2)
         } else if (data.group === 'member' && _has(data.info, 'new')) {
           this.currentNode.json = JSON.stringify({ ...data.info.new }, null, 2)
+        } else if (data.group === 'lighthouse') {
+          this.currentNode.json = JSON.stringify({ address: data.info.address }, null, 2)
         } else if (data.group !== 'ghost' && data.group === 'memberHide') {
           this.currentNode.json = JSON.stringify(data.info, null, 2)
         }
